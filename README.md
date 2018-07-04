@@ -10,3 +10,4 @@
 * GitHub相關知識
 
 ## 作業進度
+* hw1（https://jack2012aa.github.io/CSX-R-project/week1/hw1.Rmd）

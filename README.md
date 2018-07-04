@@ -9,5 +9,4 @@
 * 實作readme
 * GitHub相關知識
 
-  GitHub Desktop
 ## 作業進度

@@ -6,4 +6,6 @@
 
 # Week 1
 ## 課堂進度
+* 實作readme
+* GitHub相關知識
 ## 作業進度

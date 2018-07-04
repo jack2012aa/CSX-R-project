@@ -6,7 +6,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-#Intro
+Rmarkdown:
+##Intro
 第一週上課筆記
 *R markdown

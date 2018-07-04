@@ -23,4 +23,5 @@ This is a note for week one.
     - 宣告變數 x <-- ? 
     - numeric 數值 character 文字 logical 邏輯值
     - class() 變數種類
+    - 回家看完別的
 

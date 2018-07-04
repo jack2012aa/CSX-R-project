@@ -1,5 +1,9 @@
-# CS+X RProject in summer
- 107 summer college
+# CS+X 夏季學院資料科學程式設計
+ 107 夏季學院
 
-## Self introduction
- Hello my name is 黃章昱. I am new in using R and I hope I can learn happily in this class with everybody! 
+## 自我介紹
+ 我是黃章昱，在程式設計上是完全的新手。希望可以在暑假跟大家一起好好學習~
+
+# Week 1
+## 課堂進度
+## 作業進度

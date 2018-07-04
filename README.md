@@ -1,5 +1,5 @@
-#CS+X RProject in summer
+# CS+X RProject in summer
  107 summer college
 
-##Self introduction
+## Self introduction
  Hello my name is 黃章昱. I am new in using R and I hope I can learn happily in this class with everybody! 

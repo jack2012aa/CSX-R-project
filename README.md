@@ -11,4 +11,4 @@
 
 ## 作業進度
  - week1
-   - [hw1](https://jack2012aa.github.io/CSX-R-project/week1/hw1.Rmd)
+   - [hw1](https://jack2012aa.github.io/CSX-R-project/week1/hw1.html)

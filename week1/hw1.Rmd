@@ -6,22 +6,47 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Intro
 
-This is a note for week one.
+#第一週筆記
 
-- GitHub
-    - 一個提供多位使用者撰寫程式的平台
-    - 使用GitHub Desktop可以方便地與GitHub鏈接並更新文件
-- R markdown
-    - 一種方便的記事文件
-    - 儲存的格式為.Rmd檔，可以knit為其他格式，如html
-    - 字體放大"#" 重點"*"
-    - 在GitHub的setting中取得個人網址後加上文件位置，加上超鏈接就可以直接讀取html檔
-- R基礎運算
-    - 加 + 減 - 乘 * 除 / 餘數 %%
-    - 宣告變數 x <-- ? 
-    - numeric 數值 character 文字 logical 邏輯值
-    - class() 變數種類
-    - 回家看完別的
+###GitHub
+  - 一個提供多位使用者撰寫程式的平台
+  - 使用GitHub Desktop可以方便地與GitHub鏈接並更新文件
 
+###R markdown
+  - 一種方便的記事文件
+  - 儲存的格式為.Rmd檔，可以knit為其他格式，如html
+  - 字體放大"#" 重點"*"
+  - 在GitHub的setting中取得個人網址後加上文件位置，加上超鏈接就可以直接讀取html檔
+
+###基礎運算
+  - 加 + 減 - 乘 * 除 / 餘數 %%
+  - 宣告變數 x <-- ? 
+  - numeric 數值 character 文字 logical 邏輯值
+  - class() 變數種類
+
+###向量
+  - vector <- c(a, b, c, d...)
+  - name(vector) <- c(a, b, c ...)為向量的每一項命名
+  - sum(vector) 向量的加總
+  - vector[]向量的元素,第一個 = 1,也可用名稱搜尋
+  - a:b代表從a到b
+  - vector_a <- vector_b[selection_vector]會依照selection_vector中為TRUE的項目指派給vector_a
+
+###矩陣
+  - matrix(x, byrow = TRUE, nrow = 3)
+    - byrow代表依列填入
+    - nrow代表列的數量
+  - colnames(),rownames()用向量命名矩陣
+  - colSums(),rowSums()加總項目
+  - cbind(matrix_a, matrix_b)新增欄, rbind()新增列
+  - matrix[a,b]選取元素,a為列b為欄
+
+###因素向量
+  - 儲存類別型變數
+  - factor_vector <- factor(vector)
+  - levels(factor_vector) <- c(a, b)先把factor_vector中的東西照字的順序排列,再將a, b依序替換原向量的內容
+  - summary(factor)統計各項出現的次數
+  - factor(x, ordered = TRUE, levels = c(a, b, c))
+    - ordered指定因素向量為順序型
+    - levels()提供順序

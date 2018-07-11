@@ -7,7 +7,7 @@
   
 ```{r}
 library(ggplot2)
-ggplot(iris, aes(x = Sepal.Length)) + geom_bar(fill = "dark blue", colour = "white")
+ggplot(iris, aes(x = Species)) + geom_bar(fill = "dark blue", colour = "white")
 ```
 
 ###連續型單變數

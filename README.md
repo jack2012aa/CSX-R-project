@@ -10,12 +10,12 @@
 * GitHub相關知識
 
 ## 作業進度
-	- [hw1](https://jack2012aa.github.io/CSX-R-project/week1/hw1.html)
- 	-完成R導論、intermediate R、 Introduction to the Tidyverse
+   - [hw1](https://jack2012aa.github.io/CSX-R-project/week1/hw1.html)
+   - 完成R導論、intermediate R、 Introduction to the Tidyverse
 
 # Week 2
 ## 課堂進度
 * 資料類別
 
 ## 作業進度
-	- [hw2](https://jack2012aa.github.io/CSX-R-project/week2/hw2.html)
+   - [hw2](https://jack2012aa.github.io/CSX-R-project/week2/hw2.html)

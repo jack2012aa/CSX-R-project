@@ -1,0 +1,40 @@
+#hw2
+
+##Data Visualization
+  2018/7/11
+
+###類別型單變數
+  
+```{r}
+library(ggplot2)
+ggplot(iris, aes(x = Sepal.Length)) + geom_bar(fill = "dark blue", colour = "white")
+```
+
+###連續型單變數
+
+```{r}
+ggplot(iris, aes(x = Sepal.Length)) + geom_histogram(fill = "pink", colour = "white")
+```
+
+###連續vs.連續雙變數
+
+```{r}
+ggplot(iris, aes(x = Sepal.Length, y = Petal.Width)) + geom_point()
+```
+
+###連續vs.非連續雙變數
+
+```{r}
+ggplot(iris, aes(x = Species, y = Petal.Width)) + geom_boxplot(fill = "sky blue")
+```
+
+###多變數比較
+
+先install "lattice", "MASS", "memisc", "scales"
+```{r}
+library(ggplot2)
+library(GGally)
+library(scales)
+library(memisc)
+ggpairs(iris)
+```

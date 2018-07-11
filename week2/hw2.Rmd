@@ -19,7 +19,7 @@ ggplot(iris, aes(x = Sepal.Length)) + geom_histogram(fill = "pink", colour = "wh
 ###連續vs.連續雙變數
 
 ```{r}
-ggplot(iris, aes(x = Sepal.Length, y = Petal.Width)) + geom_point()
+ggplot(iris, aes(x = Sepal.Length, y = Petal.Width, color = Species)) + geom_point()
 ```
 
 ###連續vs.非連續雙變數

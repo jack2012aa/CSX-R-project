@@ -1,9 +1,10 @@
 source("pttTestFunction.R")
-id = c(1850:1854)
-URL = paste0("https://www.ptt.cc/bbs/Japandrama/index", id, ".html")
-filename = paste0(id, ".txt")
+id <- c(1850:1854)
+URL <- paste0("https://www.ptt.cc/bbs/Japandrama/index", id, ".html")
+filename <- paste0(id, ".txt")
 pttTestFunction
 mapply(pttTestFunction, URL = URL, filename = filename)
+
 rm(list=ls(all.names = TRUE))
 library(NLP)
 library(tm)
@@ -17,12 +18,7 @@ docs <- Corpus(VectorSource(files))
 toSpace <- content_transformer(function(x, pattern) {
   return (gsub(pattern, " ", x))
   })
-mixseg = worker()
-jieba_tokenizer=function(d){
-  unlist(segment(d[[1]],mixseg))
-}
-#修改讀取文字
-cutter=worker()
+cutter <- worker()
 docs <- tm_map(docs, toSpace, "U")
 docs <- tm_map(docs, toSpace, "推")
 docs <- tm_map(docs, toSpace, "的")
@@ -101,7 +97,6 @@ docs <- tm_map(docs, toSpace, "因")
 docs <- tm_map(docs, toSpace, "點")
 docs <- tm_map(docs, toSpace, "後")
 docs <- tm_map(docs, toSpace, "得")
-new_user_word("日劇")
 docs <- tm_map(docs, toSpace, "siedust")
 docs <- tm_map(docs, toSpace, "jyekid")
 docs <- tm_map(docs, toSpace, "最")
@@ -154,9 +149,13 @@ docs <- tm_map(docs, toSpace, "選")
 docs <- tm_map(docs, toSpace, "時")
 docs <- tm_map(docs, toSpace, "蠻")
 docs <- tm_map(docs, toSpace, "雙")
-seg = lapply(docs, jieba_tokenizer)
-freqFrame = as.data.frame(table(unlist(seg)))
-freqFrame = freqFrame[order(freqFrame$Freq,decreasing=TRUE), ]
+mixseg <- worker()
+jieba_tokenizer <-function(d){
+  unlist(segment(d[[1]],mixseg))
+}
+seg <- lapply(docs, jieba_tokenizer)
+freqFrame <- as.data.frame(table(unlist(seg)))
+freqFrame <- freqFrame[order(freqFrame$Freq,decreasing=TRUE), ]
 library(knitr)
 kable(head(freqFrame), format = "markdown")
 wordcloud(freqFrame$Var1,freqFrame$Freq,

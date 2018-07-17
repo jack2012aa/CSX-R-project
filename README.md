@@ -16,6 +16,8 @@
 # Week 2
 ## 課堂進度
 * 資料類別
+* 文字云
 
 ## 作業進度
    - [hw2](https://jack2012aa.github.io/CSX-R-project/week2/hw2.html)
+   - [文字云](https://jack2012aa.github.io/CSX-R-project/week2/文字云.html)

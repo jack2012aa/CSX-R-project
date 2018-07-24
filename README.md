@@ -30,6 +30,6 @@
 * PCA: 對資料進行降維，建立好的圖表
 * K-means
 
-##作業進度
+## 作業進度
   - [EDA](https://jack2012aa.github.io/CSX-R-project/week3/Live_coding)
   - [TF-IDF, PCA, K-means](https://jack2012aa.github.io/CSX-R-project/week3/TF-IDF,_PCA,_K-means)

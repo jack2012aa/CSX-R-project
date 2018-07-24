@@ -21,3 +21,15 @@
 ## 作業進度
    - [hw2](https://jack2012aa.github.io/CSX-R-project/week2/hw2.html)
    - [文字云](https://jack2012aa.github.io/CSX-R-project/week2/文字云.html)
+
+# Week 3
+## 課堂進度
+* 如何撰寫Livecoding
+* EDA: 不使用任何工具，僅僅以視覺化資料分析和認識資料間的關係
+* TF-IDF: 用數學運算去除文字中出現在各資料中、不重要的字，更好的建立文字云
+* PCA: 對資料進行降維，建立好的圖表
+* K-means
+
+##作業進度
+  - [EDA](https://jack2012aa.github.io/CSX-R-project/week3/Live_coding)
+  - [TF-IDF, PCA, K-means](https://jack2012aa.github.io/CSX-R-project/week3/TF-IDF,_PCA,_K-means)

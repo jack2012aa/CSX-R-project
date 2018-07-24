@@ -1,0 +1,89 @@
+---
+title: 'Report - Titanic: 2nd degree families and majority voting'
+output: html_document
+---
+
+#從分析鐵達尼號乘客學習EDA
+
+##存取
+###必要的packages
+```{r}
+library(Hmisc)
+library(knitr)
+library(ggplot2)
+library(dplyr)
+library(caret)
+library(randomForest)
+library(gridExtra)
+library(ROCR)
+library(corrplot)
+```
+###讀取數據
+```{r}
+train <- read.csv("./Data/train.csv", stringsAsFactors = F, na.strings = c("NA", ""))
+test <- read.csv("./Data/test.csv", stringsAsFactors = F, na.strings = c("NA", ""))
+```
+###將train和test合併成一個數據
+因為test缺少了survived的欄位,所以要新增一個
+```{r}
+test$Survived <- NA
+passenger <- rbind(train, test)
+```
+
+##檢視數據
+###使用str()
+```{r}
+str(passenger)
+```
+###尋找有哪些資料缺失
+```{r}
+sapply(passenger, function(x){sum(is.na(x))})
+```
+
+##分析Name
+###新增Surname和Title欄位
+"[,.]"代表從",."處分開成兩段,",."代表
+```{r}
+passenger$Surname <- sapply(passenger$Name, function(x){strsplit(x, split = "[,.]")[[1]][1]})
+passenger$Surname <- sapply(passenger$Surname, function(x){strsplit(x, split = "[-]")[[1]][1]})
+passenger$Title <- sapply(passenger$Name, function(x){strsplit(x, split = "[,.]")[[1]][2]})
+passenger$Title <- sub(" ", "", passenger$Title)
+```
+###合併稱謂
+Mlle, Ms = Miss, Mme = Mrs, 其他數目過少一起合併
+%in%代表分開的==
+```{r}
+passenger$Title[passenger$Title %in% c("Mlle", "Ms")] <- "Miss"
+passenger$Title[passenger$Title == "Mme"] <- "Mrs"
+passenger$Title[!(passenger$Title %in% c('Master', 'Miss', 'Mr', 'Mrs'))] <- "Rare Title"
+passenger$Title <- as.factor(passenger$Title)
+kable(table(passenger$Sex, passenger$Title))
+```
+觀察稱謂和存活的關係
+```{r}
+#提供Survived間的差別
+passenger$Survived <- as.factor(passenger$Survived)
+ggplot(passenger[!is.na(passenger$Survived),], aes(x = Title, fill = Survived)) + geom_bar(stat = "count", position = "stack") + labs(x = "Title") + theme_grey()
+```
+
+##團體旅客
+###家庭大小
+將SibSp(兄弟姐妹),Parch(父母)和自己加起來
+```{r}
+passenger$Fsize <- passenger$SibSp + passenger$Parch + 1
+#家庭大小和存活的關係
+ggplot(passenger[!is.na(passenger$Survived),], aes(x = Fsize, fill = Survived)) + geom_bar(stat = "count", position = "dodge")
+```
+###檢驗錯誤的家庭大小
+```{r}
+passenger$Fsizename <- paste(as.character(passenger$Fsize), passenger$Surname, sep = '')
+SizeCheck <- passenger %>%
+  group_by(Fsizename, Fsize)%>%
+  #把Fsize和Fsizename相同的資料加起來成為一個數字
+  summarise(NumObs = n())
+SizeCheck$modulo <- SizeCheck$NumObs %% SizeCheck$Fsize
+#選出數據與實際不相符者
+SizeCheck <- SizeCheck[SizeCheck$modulo != 0,]
+#產生錯誤資料的家庭成員數量的總和
+sum(SizeCheck$NumObs)
+```

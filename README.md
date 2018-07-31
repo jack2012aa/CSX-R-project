@@ -33,3 +33,12 @@
 ## 作業進度
   - [EDA](https://jack2012aa.github.io/CSX-R-project/week3/Live_coding)
   - [TF-IDF, PCA, K-means](https://jack2012aa.github.io/CSX-R-project/week3/TF-IDF,_PCA,_K-means)
+
+# Week 4
+## 課堂進度
+* EDA後，利用T-test與ANOVA檢驗資料間的關係。
+* 線性回歸
+
+##作業進度
+  - [用T-test檢驗week3數據](https://jack2012aa.github.io/CSX-R-project/week4/t-test)
+  - [用ANOVA和回歸檢驗幸福指數](https://jack2012aa.github.io/CSX-R-project/week4/WHR)

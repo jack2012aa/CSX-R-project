@@ -1,0 +1,65 @@
+---
+title: "T-test"
+output: html_document
+---
+
+##統計
+###t-test:通過平均數和變異數進行兩個資料的比較
+  - 只能用來處理平均分佈的數據
+
+###WEEK3的部分
+```{r, results = "asis", message=FALSE}
+library(Hmisc)
+library(knitr)
+library(ggplot2)
+library(dplyr)
+library(caret)
+library(randomForest)
+library(gridExtra)
+library(ROCR)
+library(corrplot)
+train <- read.csv("./Data/train.csv", stringsAsFactors = F, na.strings = c("NA", ""))
+test <- read.csv("./Data/test.csv", stringsAsFactors = F, na.strings = c("NA", ""))
+test$Survived <- NA
+passenger <- rbind(train, test)
+```
+
+###檢視資料
+```{r}
+str(passenger)
+head(passenger)
+summary(passenger)
+```
+
+###研究年齡和存活之間的關係(t-test)
+  - H0:年齡和存活沒有相關性(死亡和存活的人的平均年齡相同)
+
+####處理資料
+  - 由上面可以看到survived欄是數值，為了作圖需要改成文字，並且去除缺少數據的項目。
+```{r}
+#除去Survived = NA的項目
+passenger <- passenger[!is.na(passenger$Survived),]
+#除去Age = NA的項目
+passenger <- passenger[!is.na(passenger$Age),]
+#修改Survived的結構
+passenger$Survived <- sapply(passenger$Survived, function(x){
+  as.character(x)
+})
+#查看年齡組成
+ggplot(passenger, aes(x = Age)) + geom_histogram() + labs(x = "Age", title = "年齡組成")
+ggplot(passenger, aes(x = Survived, y = Age)) + geom_boxplot() + coord_flip()+ labs(x = "Survive", y = "Age", title = "Survived Box")
+```
+
+####計算95%信賴區間
+```{r}
+with(passenger,
+     tapply(Age, Survived, function(x){
+       c(mean(x) + c(-2, 2)*sd(x)/sqrt(length(x)))
+     }))
+```
+
+####檢驗差異
+```{r}
+t.test(Age ~ Survived, data = passenger)
+```
+因為P-value < 0.05,代表兩者的差異顯著,所以否認虛無假說H0,年齡和存活間有相關性(死亡和存活的人的平均年齡不同)

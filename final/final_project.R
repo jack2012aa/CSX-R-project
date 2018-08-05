@@ -81,3 +81,29 @@ countrymean(score_2012, "United Kingdom", score)
 countrymean(score_2013, "United Kingdom", score)
 countrymean(score_2014, "United Kingdom", score)
 countrymean(score_2015, "United Kingdom", score)
+score$avesc <- apply(score[2:5], 1, mean)
+
+score.GPI <- merge(score, data[data$topic == "School enrollment, tertiary (gross), gender parity index (GPI)",], by = "country")
+#國與國
+score.GPI$avescG <- apply(score.GPI[8:11], 1, mean)
+model.GPI <- lm(avesc~avescG, data = score.GPI)
+summary(model.GPI)
+ggplot(score.GPI, aes(avesc, avescG)) + geom_point() + geom_smooth(method ="lm")
+#各年
+year.GPI <- cbind(as.data.frame(t(score.GPI[,2:5])),as.data.frame(t(score.GPI[,8:11])))
+colnames(year.GPI) <- paste("V", c(1:24), sep = "")
+summary(lm(as.numeric(score.GPI[3,2:5]) ~ as.numeric(score.GPI[3,8:11])))
+ggplot(year.GPI, aes(V3,V15)) + geom_point() +geom_smooth(method = "lm")
+
+score.expend <- merge(score, data[data$topic == "Expenditure on tertiary education (% of government expenditure on education)",], by = "country")
+
+score.expend.std <- merge(score, data[data$topic == "Expenditure on tertiary education (% of government expenditure on education)",], by = "country")
+
+score.current <- merge(score, data[data$topic == "Current education expenditure, tertiary (% of total expenditure in tertiary public institutions)",], by = "country")
+
+score.gross <- merge(score,data[data$topic == "School enrollment, tertiary (% gross)",], by = "country")
+
+score.stdratio <- merge(score, data[data$topic == "Pupil-teacher ratio, tertiary",], by = "country")
+
+score.attain <- merge(score, data[data$topic == "Educational attainment, at least completed short-cycle tertiary, population 25+, total (%) (cumulative)",], by = "country")
+

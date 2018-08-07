@@ -25,10 +25,10 @@ x2014 <- c(1:13)
 x2015 <- c(1:13)
 score <- data.frame(country, x2012, x2013,x2014,x2015)
 
-score_2012 <- as.data.frame(rank_2012[,c(3,13,14)])
-score_2013 <- as.data.frame(rank_2013[,c(3,13,14)])
-score_2014 <- as.data.frame(rank_2014[,c(3,13,14)])
-score_2015 <- as.data.frame(rank_2015[,c(3,13,14)])
+
+for (n in c(2012:2015)){
+  paste("score", n, sep = "_") <- as.data.frame(paste("rank", n, sep = "_")[c(3,13,14)])
+}
 countrymean(score_2012, "USA", score)
 countrymean(score_2013, "USA", score)
 countrymean(score_2014, "USA", score)
@@ -91,10 +91,7 @@ summary(model.GPI)
 ggplot(score.GPI, aes(avesc, avescG)) + geom_point() + geom_smooth(method ="lm")
 #各年
 year.GPI <- data.frame(c(1:48),c(1:48))
-year.GPI[1:12,1] <- score.GPI[,2]
-year.GPI[13:24,1] <- score.GPI[,3]
-year.GPI[25:36,1] <- score.GPI[,4]
-year.GPI[37:48,1] <- score.GPI[,5]
+year.GPI[1:48,1] <- score.GPI[,2:5]
 year.GPI[1:12,2] <- score.GPI[,8]
 year.GPI[13:24,2] <- score.GPI[,9]
 year.GPI[25:36,2] <- score.GPI[,10]

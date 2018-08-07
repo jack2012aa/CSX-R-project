@@ -1,27 +1,15 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
+library(markdown)
 library(ggplot2)
 rank <- read.csv("./Data/College ranking.csv", stringsAsFactors = F, na.strings = c("NA", ""))
 GDP <- read.csv("./Data/Country GDP.csv", stringsAsFactors = F, na.strings = c("NA",""))
 data <- read.csv("./Data/edu_var.csv", stringsAsFactors = F, na.strings = c("NA",""))
-expend <- read.csv("./Data/Government expenditure.csv", stringsAsFactors = F, na.strings = c("NA",""))
 rank_2012 <- rank[rank$year == "2012",]
 rank_2013 <- rank[rank$year == "2013",]
 rank_2014 <- rank[rank$year == "2014",]
 rank_2014 <- rank_2014[1:100,]
 rank_2015 <- rank[rank$year == "2015",]
 rank_2015 <- rank_2015[1:100,]
-rank_total1 <- merge(rank_2012, rank_2013, by = "institution")
-rank_total2 <- merge(rank_2014, rank_2015, by = "institution")
-rank_total <- merge(rank_total1, rank_total2, by = "institution")
 countrymean <- function(x,y,z){
   eval.parent(substitute(z[z$country == y, paste("x",x[1,"year"], sep = "")] <- mean(x[x$country == y,2])))
 }
@@ -31,7 +19,6 @@ x2013 <- c(1:13)
 x2014 <- c(1:13)
 x2015 <- c(1:13)
 score <- data.frame(country, x2012, x2013,x2014,x2015)
-
 score_2012 <- as.data.frame(rank_2012[,c(3,13,14)])
 score_2013 <- as.data.frame(rank_2013[,c(3,13,14)])
 score_2014 <- as.data.frame(rank_2014[,c(3,13,14)])
@@ -88,56 +75,133 @@ countrymean(score_2012, "United Kingdom", score)
 countrymean(score_2013, "United Kingdom", score)
 countrymean(score_2014, "United Kingdom", score)
 countrymean(score_2015, "United Kingdom", score)
-score$avesc <- apply(score[2:5], 1, mean)
-score.GPI <- merge(score, data[data$topic == "School enrollment, tertiary (gross), gender parity index (GPI)",], by = "country")
-score.GPI$avescG <- apply(score.GPI[8:11], 1, mean)
-year.GPI <- data.frame(c(1:48),c(1:48))
-year.GPI[1:12,1] <- score.GPI[,2]
-year.GPI[13:24,1] <- score.GPI[,3]
-year.GPI[25:36,1] <- score.GPI[,4]
-year.GPI[37:48,1] <- score.GPI[,5]
-year.GPI[1:12,2] <- score.GPI[,8]
-year.GPI[13:24,2] <- score.GPI[,9]
-year.GPI[25:36,2] <- score.GPI[,10]
-year.GPI[37:48,2] <- score.GPI[,11]
-colnames(year.GPI) <- c("score","GPI")
 
-# Define UI for application that draws a histogram
-ui <- fluidPage(
-   
-   # Application title
-   titlePanel("用數據看世界大學排名"),
-   
-   # Sidebar with a slider input for number of bins 
-   sidebarLayout(
-      sidebarPanel(
-         selectInput("dataselect",
-                     "Data:",
-                  choices = data$topic),
-         
-         hr(),
-         helpText("選擇要看什麼數據和排名的關係")
-      ),
-      
-      # Show a plot of the generated distribution
+ui <- navbarPage("大學排名",
+  tabPanel(
+    "Introduction",
+    tags$h1("")
+  ),
+                                
+  navbarMenu("H",
+    tabPanel("Data",
+      fluidRow(
+        column(4,
+          selectInput("choice", "Data:", choices = c("College ranking","edu_var"))
+    )),
+      dataTableOutput("table")
+    ),
+             
+    tabPanel("2",
+      sidebarLayout(
+        sidebarPanel(
+          selectInput("datayear","Data:",choices = c(2012,2013,2014,2015)),
+          hr(),
+          helpText(h3("各國大學成績分佈-按年份"))
+        ),
       mainPanel(
-         plotOutput("distPlot")
-      )
-   )
-)
-
-# Define server logic required to draw a histogram
-server <- function(input, output) {
-   
-   output$distPlot <- renderPlot({
-      # generate bins based on input$bins from ui.R
-      x    <-  merge(score, data[data$topic == input$dataselect,], by = "country")
-      x$avescG <- apply(x[8:10], 1, mean)
-      
-      # draw the histogram with the specified number of bins
-      ggplot(x, aes(avesc, avescG)) + geom_point() + geom_smooth(method ="lm")
-   })
-}
+        plotOutput("Country"),
+        h3("可見除了美國以外成績分佈都還算平均,所以各國在我們選擇的時間內的代表分數就用平均分計算")
+    ))),
+    
+    tabPanel("3",
+     titlePanel("用數據看世界大學排名"),
+      sidebarLayout(
+        sidebarPanel(
+          selectInput("dataselect","Data:",choices = data$topic),
+          hr(),
+          helpText("選擇要看什麼數據和排名的關係"),
+          sliderInput("range", "Range:",min = 2012, max = 2015, value = c(2012,2014)),
+          hr(),
+          helpText("想看的年份"),
+          checkboxInput("checkbox", label = "平均", value = TRUE),
+          hr()
+        ),
+        mainPanel(
+          plotOutput("distPlot")
+      ))),
+           
+    tabPanel("Summary",
+      titlePanel("經過各種回歸後..."),
+      sidebarLayout(
+       sidebarPanel(
+         selectInput("dataselectreg","Data:",choices = data$topic),
+         hr(),
+         helpText("選擇要看什麼數據和排名的回歸"),
+         sliderInput("rangereg", "Range:",min = 2012, max = 2015, value = c(2012,2014)),
+         hr(),
+         helpText("想看的年份"),
+         checkboxInput("checkboxreg", label = "平均", value = TRUE),
+         hr()
+       ),
+       mainPanel(
+         verbatimTextOutput("summary")
+       )))
+))
+    
+server <- function(input, output,session) {
+  output$distPlot <- renderPlot({
+      if (input$checkbox){
+        year <-  merge(score, data[data$topic == input$dataselect,], by = "country")
+        Value <- input$range - c(2004,2004)
+        year$score <- apply(year[2:5], 1, mean)
+        year$score_ <- apply(year[Value[1]:Value[2]], 1, mean)
+      } else {
+        x <-  merge(score, data[data$topic == input$dataselect,], by = "country")
+        Value <- input$range - c(2010,2010)
+        subs <- 12*length(Value)
+        yearnum <- Value[1]:Value[2]
+        year <- data.frame(c(1:subs), c(1:subs))
+        count <- 1
+        for(n in yearnum){
+        rown1 <- 12*count - 11
+        rown2 <- 12*count
+        year[rown1 : rown2,1] <- x[,n]
+        year[rown1 : rown2,2] <- x[,n + 5]
+        colnames(year) <- c("score","score_")
+        count <- count + 1
+        }
+      }
+    ggplot(year, aes(score_,score)) + geom_point() +geom_smooth(method = "lm") + labs(x = input$dataselect, y = "score")
+  })
+  output$Country <- renderPlot({
+    rankplot <- rank[rank$year == input$datayear,]
+    rankplot <- rankplot[1:100,]
+    ggplot(rankplot, aes(x = score)) + geom_histogram() + facet_grid(~country) + theme_bw() + stat_bin(bins = 100)
+  })
+  output$summary <- renderPrint({
+    if (input$checkboxreg){
+      year <-  merge(score, data[data$topic == input$dataselectreg,], by = "country")
+      Value <- input$rangereg - c(2004,2004)
+      year$score <- apply(year[2:5], 1, mean)
+      year$score_ <- apply(year[Value[1]:Value[2]], 1, mean)
+    } else {
+      x <-  merge(score, data[data$topic == input$dataselectreg,], by = "country")
+      Value <- input$rangereg - c(2010,2010)
+      subs <- 12*length(Value)
+      yearnum <- Value[1]:Value[2]
+      year <- data.frame(c(1:subs), c(1:subs))
+      count <- 1
+      for(n in yearnum){
+        rown1 <- 12*count - 11
+        rown2 <- 12*count
+        year[rown1 : rown2,1] <- x[,n]
+        year[rown1 : rown2,2] <- x[,n + 5]
+        colnames(year) <- c("score","score_")
+        count <- count + 1
+      }
+    }
+    summary(lm(score_~score,data = year), data = year)
+  })
+  output$table <- renderDataTable({
+    if (input$choice == "Collage ranking"){
+      show <- rank
+    }
+    if (input$choice == "edu_var"){
+      show <- data
+    }
+    show
+  })
+  }
 
 # Run the application 
 shinyApp(ui = ui, server = server)

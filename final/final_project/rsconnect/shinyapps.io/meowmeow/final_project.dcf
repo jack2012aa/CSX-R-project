@@ -1,0 +1,12 @@
+name: final_project
+title: final_project
+username:
+account: meowmeow
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 396944
+bundleId: 1524149
+url: https://meowmeow.shinyapps.io/final_project/
+when: 1533704331.18364
+asMultiple: FALSE
+asStatic: FALSE

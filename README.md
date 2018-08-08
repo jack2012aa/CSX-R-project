@@ -42,3 +42,7 @@
 ##作業進度
   - [用T-test檢驗week3數據](https://jack2012aa.github.io/CSX-R-project/week4/t-test)
   - [用ANOVA和回歸檢驗幸福指數](https://jack2012aa.github.io/CSX-R-project/week4/HWR)
+
+# Week 5&6
+##作業進度
+ - [Shiny](https://peijunghsin.shinyapps.io/final_project/)

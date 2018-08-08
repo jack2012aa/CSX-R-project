@@ -1,0 +1,7 @@
+﻿創作者：黃章昱、辛佩蓉、徐紹誠
+主題：以國家為單位看世界大學排名
+發想：想要知道有什麼因素會影響大學排名，了解後渴望以此為基礎增進教育競爭力。
+資料來源：
+1.各國教育相關資料https://data.worldbank.org/topic/education
+2.世界大學排名https://www.kaggle.com/mylesoneill/world-university-rankings
+

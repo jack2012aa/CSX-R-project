@@ -81,83 +81,99 @@ countrymean(score_2015, "United Kingdom", score)
 ui <- navbarPage(h3("大學排名"),
   tabPanel(
     h3("Task"),
-    tags$h2("我們好奇以國家層面來說究竟有什麼會影響世界大學排名的分數")
+    fluidRow(
+    column(12,
+    pre(h2(includeText("./Data/intro.txt"))),
+    br()
+    ))
   ),
-                                
-  navbarMenu(h3("資料和各國排名分數的回歸"),
+  tabPanel(
+    h3("EDA"),
+    fluidRow(
+      column(12,
+             pre(h2(includeText("./Data/EDA.txt"))),
+             br()
+      ))
+  ),
+  
+  navbarMenu(h3("大學排名"),
+             tabPanel(h3("Explore the Data"),
+                      
+                      fluidRow(
+                        column(4,
+                               selectInput("country",
+                                           "Country:",
+                                           c("All",
+                                             unique(as.character(College_ranking100$country))))
+                        ),
+                        column(4,
+                               selectInput("institution",
+                                           "Institution:",
+                                           c("All",
+                                             unique(as.character(College_ranking100$institution))))
+                        ),
+                        column(4,
+                               selectInput("year",
+                                           "Year:",
+                                           c("All",
+                                             unique(as.character(College_ranking100$year))))
+                        )
+                      ),
+                      fluidRow(dataTableOutput("table2")),
+                      tabPanel("Explore the Data 2",
+                               
+                               sidebarLayout(
+                                 sidebarPanel(
+                                   conditionalPanel(
+                                     'input.dataset === "College_ranking"',
+                                     checkboxGroupInput("show_vars", "Columns in College_ranking to show:",
+                                                        names(College_ranking), selected = names(College_ranking))
+                                   )
+                                 ),
+                                 mainPanel(
+                                   tabsetPanel(
+                                     id = 'dataset',
+                                     tabPanel("College_ranking", dataTableOutput("mytable1"))
+                                   )
+                                 )
+                               )
+                      )),   
+             
+             tabPanel(h3("大學排名"),
+                      titlePanel("看看前100大學排名"),
+                      sidebarLayout(
+                        sidebarPanel(
+                          selectInput("datayear","Data:",choices = c(2012,2013,2014,2015)),
+                          hr(),
+                          helpText(h3("各國大學成績分佈-按年份"))
+                        ),
+                        mainPanel(
+                          plotOutput("Country"),
+                          h3("可見除了美國以外成績分佈都還算平均,所以各國在我們選擇的時間內的代表分數就用平均分計算")
+                        ))),
+             
+             tabPanel(h3("Maps"),
+                      
+                      fluidRow( 
+                        column(4, wellPanel(
+                          radioButtons("picture", "Maps:",
+                                       c("USA", "UK","Taiwan","Switzerland","Sweden","South Korea","Singapore","Russia","Norway","Netherlands","Japan","Israel","Germany","France","Denmark","China","Canada","Belgium","Australia"))
+                        )),
+                        column(4,
+                               imageOutput("image"))))
+             
+             
+             ),
+                      
+  navbarMenu(h3("各國分數的回歸"),
     tabPanel(h3("資料"),
-      titlePanel("先來看看資料"),
+      titlePanel("先來看看要比較的資料"),
       fluidRow(
         column(4,
           selectInput("choice", "Data:", choices = c("College ranking","edu_var"))
     )),
       dataTableOutput("table")
     ),
-    tabPanel(h3("Explore the Data"),
-             
-             fluidRow(
-               column(4,
-                      selectInput("country",
-                                  "Country:",
-                                  c("All",
-                                    unique(as.character(College_ranking100$country))))
-               ),
-               column(4,
-                      selectInput("institution",
-                                  "Institution:",
-                                  c("All",
-                                    unique(as.character(College_ranking100$institution))))
-               ),
-               column(4,
-                      selectInput("year",
-                                  "Year:",
-                                  c("All",
-                                    unique(as.character(College_ranking100$year))))
-               )
-             ),
-             fluidRow(dataTableOutput("table2")),
-             tabPanel("Explore the Data 2",
-                      
-                      sidebarLayout(
-                        sidebarPanel(
-                          conditionalPanel(
-                            'input.dataset === "College_ranking"',
-                            checkboxGroupInput("show_vars", "Columns in College_ranking to show:",
-                                               names(College_ranking), selected = names(College_ranking))
-                          )
-                        ),
-                        mainPanel(
-                          tabsetPanel(
-                            id = 'dataset',
-                            tabPanel("College_ranking", dataTableOutput("mytable1"))
-                          )
-                        )
-                      )
-             )),   
-    
-    tabPanel(h3("大學排名"),
-      titlePanel("看看前100大學排名"),
-      sidebarLayout(
-        sidebarPanel(
-          selectInput("datayear","Data:",choices = c(2012,2013,2014,2015)),
-          hr(),
-          helpText(h3("各國大學成績分佈-按年份"))
-        ),
-      mainPanel(
-        plotOutput("Country"),
-        h3("可見除了美國以外成績分佈都還算平均,所以各國在我們選擇的時間內的代表分數就用平均分計算")
-    ))),
-    
-    tabPanel(h3("Maps"),
-             
-             fluidRow( 
-               column(4, wellPanel(
-                 radioButtons("picture", "Maps:",
-                              c("USA", "UK","Taiwan","Switzerland","Sweden","South Korea","Singapore","Russia","Norway","Netherlands","Japan","Israel","Germany","France","Denmark","China","Canada","Belgium","Australia"))
-               )),
-               column(4,
-                      imageOutput("image")))),
-    
     
     tabPanel(h3("回歸"),
       titlePanel("看看各資料和各國分數的回歸"),       
@@ -174,7 +190,15 @@ ui <- navbarPage(h3("大學排名"),
         ),
         mainPanel(plotOutput("distPlot"),verbatimTextOutput("summary")))
         )
-    ))
+    ),
+  tabPanel(h3("Summary"),
+           h3("Summary"),
+           fluidRow(
+             column(12,
+                    pre(h2(includeText("./Data/end.txt"))),
+                    br()
+             ))
+  ))
     
 server <- function(input, output,session) {
   output$distPlot <- renderPlot({
@@ -187,20 +211,21 @@ server <- function(input, output,session) {
       } else {
         x <-  merge(score, data[data$topic == input$dataselect,], by = "country")
         Value <- input$range - c(2010,2010)
-        subs <- 13*length(Value)
         yearnum <- Value[1]:Value[2]
-        year <- data.frame(c(1:subs), c(1:subs))
+        subs <- 13*length(yearnum)
+        year <- data.frame(c(1:subs), c(1:subs),as.character(eval(c(1:subs))), stringsAsFactors=FALSE)
         count <- 1
         for(n in yearnum){
         rown1 <- 13*count - 12
         rown2 <- 13*count
         year[rown1 : rown2,1] <- x[,n]
         year[rown1 : rown2,2] <- x[,n + 5]
-        colnames(year) <- c("score","score_")
+        year[rown1 : rown2,3] <- as.character(x$country)
         count <- count + 1
         }
+        colnames(year) <- c("score","score_", "country")
       }
-    ggplot(year, aes(score_,score)) + geom_point() +geom_smooth(method = "lm") + labs(x = input$dataselect, y = "score")
+    ggplot(year, aes(score_,score)) + geom_point() +geom_smooth(method = "lm") + labs(x = input$dataselect, y = "score") + geom_text(aes(label = country, vjust = 1.1))
   })
   
   output$Country <- renderPlot({
